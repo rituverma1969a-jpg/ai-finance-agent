@@ -1,0 +1,6 @@
+claim_id,patient,amount_claimed,claim_date,insurer
+CLM001,Raj Sharma,25000,2024-01-05,Star Health
+CLM002,Priya Mehta,48000,2024-01-08,HDFC Ergo
+CLM003,Amit Singh,15000,2024-01-10,Star Health
+CLM004,Sunita Rao,72000,2024-01-12,ICICI Lombard
+CLM005,Vikram Das,33000,2024-01-15,HDFC Ergo

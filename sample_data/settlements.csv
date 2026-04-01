@@ -1,0 +1,4 @@
+claim_id,amount_settled,settlement_date,status
+CLM001,22000,2024-01-25,settled
+CLM003,15000,2024-01-28,settled
+CLM005,30000,2024-01-30,settled

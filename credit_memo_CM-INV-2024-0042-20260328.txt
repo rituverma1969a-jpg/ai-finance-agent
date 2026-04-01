@@ -1,0 +1,56 @@
+## CREDIT MEMO
+
+**[Your Company Name]**
+[Your Company Address]
+[Your City, Postal Code]
+[Your Phone Number]
+[Your Email Address]
+[Your Website (Optional)]
+
+---
+
+**CREDIT MEMO NUMBER:** CM-INV-2024-0042-20260328
+
+**DATE:** 28 March 2026
+
+**ORIGINAL INVOICE NUMBER:** INV-2024-0042
+
+---
+
+**ISSUED TO:**
+
+**ABC Corporation Pvt Ltd**
+123 Business Park
+Mumbai, Maharashtra - 400001
+
+---
+
+**CREDIT ITEMS:**
+
+| Description                       | Quantity | Unit Price (Rs.) | Total Amount (Rs.) |
+| :-------------------------------- | :------- | :--------------- | :----------------- |
+| Returned damaged goods            | 10       | 1,200            | 12,000             |
+| Overcharge correction on invoice  | N/A      | N/A              | 3,000              |
+
+---
+
+**TOTAL CREDIT AMOUNT:** **Rs. 15,000**
+
+---
+
+**REASON FOR CREDIT:**
+This credit memo is issued due to the return of damaged goods by the customer and a billing correction required on the original invoice.
+
+---
+
+**PAYMENT ADJUSTMENT INSTRUCTIONS:**
+This credit memo represents an amount that will be deducted from future outstanding invoices owed by ABC Corporation Pvt Ltd to [Your Company Name]. Please apply this credit against your next payment accordingly. If you have any questions regarding this credit memo, please do not hesitate to contact our accounts department.
+
+---
+
+**AUTHORIZED BY:**
+
+_________________________
+**[Finance Manager's Name]**
+Finance Manager
+[Your Company Name]
