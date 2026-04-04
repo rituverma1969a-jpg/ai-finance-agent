@@ -103,7 +103,7 @@ elif module == "📊 Dashboard":
                     color_discrete_sequence=["#2ecc71", "#e74c3c"],
                     title="Invoice Status"
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
             with col2:
                 fig2 = px.bar(
                     x=["Total Invoiced", "Total Paid", "Outstanding"],
@@ -118,7 +118,7 @@ elif module == "📊 Dashboard":
                     labels={"x": "Type", "y": "Amount (Rs.)"}
                 )
                 fig2.update_layout(showlegend=False)
-                st.plotly_chart(fig2, use_container_width=True)
+                st.plotly_chart(fig2, width="stretch")
 
         if dash_claims and dash_settle:
             claims = pd.read_csv(dash_claims)
@@ -145,7 +145,7 @@ elif module == "📊 Dashboard":
                     color_discrete_sequence=["#2ecc71", "#e74c3c"],
                     title="Claims Status"
                 )
-                st.plotly_chart(fig3, use_container_width=True)
+                st.plotly_chart(fig3, width="stretch")
             with col2:
                 fig4 = px.bar(
                     x=["Total Claimed", "Total Settled"],
@@ -159,7 +159,7 @@ elif module == "📊 Dashboard":
                     labels={"x": "Type", "y": "Amount (Rs.)"}
                 )
                 fig4.update_layout(showlegend=False)
-                st.plotly_chart(fig4, use_container_width=True)
+                st.plotly_chart(fig4, width="stretch")
 
         if dash_budget:
             df = pd.read_csv(dash_budget)
@@ -178,7 +178,7 @@ elif module == "📊 Dashboard":
                     title="Income vs Expenses",
                     color_discrete_map={"income": "#2ecc71", "expenses": "#e74c3c"}
                 )
-                st.plotly_chart(fig5, use_container_width=True)
+                st.plotly_chart(fig5, width="stretch")
             with col2:
                 colors = ["#2ecc71" if x > 0 else "#e74c3c" for x in df['net']]
                 fig6 = go.Figure(go.Bar(
@@ -186,10 +186,10 @@ elif module == "📊 Dashboard":
                     marker_color=colors
                 ))
                 fig6.update_layout(title="Monthly Net Surplus/Deficit")
-                st.plotly_chart(fig6, use_container_width=True)
+                st.plotly_chart(fig6, width="stretch")
 
         st.success("Dashboard Generated! ✅")
-        
+
 # ─── INVOICE RECONCILIATION ─────────────────────────
 elif module == "🧾 Invoice Reconciliation":
     st.title("🧾 Invoice Reconciliation")
@@ -278,7 +278,7 @@ elif module == "🧾 Invoice Reconciliation":
                     labels={"x": "Status", "y": "Count"}
                 )
                 fig1.update_layout(showlegend=False)
-                st.plotly_chart(fig1, use_container_width=True)
+                st.plotly_chart(fig1, width="stretch")
 
             with col2:
                 fig2 = px.pie(
@@ -287,7 +287,7 @@ elif module == "🧾 Invoice Reconciliation":
                     color_discrete_sequence=["#2ecc71", "#e74c3c"],
                     title="Payment Amount Breakdown"
                 )
-                st.plotly_chart(fig2, use_container_width=True)
+                st.plotly_chart(fig2, width="stretch")
 
             if len(unmatched) > 0:
                 fig3 = px.bar(
@@ -298,7 +298,7 @@ elif module == "🧾 Invoice Reconciliation":
                     title="Unpaid Amount by Vendor",
                     labels={"vendor": "Vendor", "amount": "Amount (Rs.)"}
                 )
-                st.plotly_chart(fig3, use_container_width=True)
+                st.plotly_chart(fig3, width="stretch")
 
 # ─── INSURANCE RECONCILIATION ───────────────────────
 elif module == "🏥 Insurance Reconciliation":
@@ -384,7 +384,7 @@ elif module == "🏥 Insurance Reconciliation":
                     color_discrete_sequence=["#2ecc71", "#e74c3c"],
                     title="Claims Settlement Status"
                 )
-                st.plotly_chart(fig1, use_container_width=True)
+                st.plotly_chart(fig1, width="stretch")
 
             with col2:
                 fig2 = px.bar(
@@ -399,7 +399,7 @@ elif module == "🏥 Insurance Reconciliation":
                     labels={"x": "Type", "y": "Amount (Rs.)"}
                 )
                 fig2.update_layout(showlegend=False)
-                st.plotly_chart(fig2, use_container_width=True)
+                st.plotly_chart(fig2, width="stretch")
 
             if len(high_variance) > 0:
                 fig3 = px.bar(
@@ -410,7 +410,7 @@ elif module == "🏥 Insurance Reconciliation":
                     title="High Variance Cases",
                     labels={"patient": "Patient", "variance": "Variance Amount (Rs.)"}
                 )
-                st.plotly_chart(fig3, use_container_width=True)
+                st.plotly_chart(fig3, width="stretch")
 
 # ─── CREDIT MEMO BUILDER ────────────────────────────
 elif module == "📝 Credit Memo Builder":
@@ -502,7 +502,7 @@ elif module == "📈 Budget Forecast":
                 labels={"value": "Amount (Rs.)", "month": "Month"},
                 color_discrete_map={"income": "#2ecc71", "expenses": "#e74c3c"}
             )
-            st.plotly_chart(fig1, use_container_width=True)
+            st.plotly_chart(fig1, width="stretch")
 
         with col2:
             df['net'] = df['income'] - df['expenses']
@@ -512,7 +512,7 @@ elif module == "📈 Budget Forecast":
                 marker_color=colors, name="Net Surplus"
             ))
             fig2.update_layout(title="Monthly Net Surplus/Deficit")
-            st.plotly_chart(fig2, use_container_width=True)
+            st.plotly_chart(fig2, width="stretch")
 
         if st.button("Generate Forecast", type="primary"):
             with st.spinner("Generating forecast..."):
