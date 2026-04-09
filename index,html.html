@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Finance Agent — Ritu Verma</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f5f2eb;
+    --accent: #1a6b3c;
+    --accent2: #e8a020;
+    --accent3: #c0392b;
+    --muted: #6b6455;
+    --rule: #d4cfc4;
+    --card: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.4;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .hero-left {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26,107,60,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 40px;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(52px, 7vw, 88px);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent2);
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(245,242,235,0.7);
+    max-width: 380px;
+    margin-bottom: 48px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: #15573a; transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid rgba(245,242,235,0.4);
+  }
+  .btn-outline:hover { border-color: var(--paper); transform: translateY(-2px); }
+
+  .hero-right {
+    background: var(--paper);
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .hero-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    margin-top: 32px;
+  }
+  .hero-meta-label:first-child { margin-top: 0; }
+
+  .hero-meta-val {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .hero-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .tag.green { background: var(--accent); }
+  .tag.gold { background: var(--accent2); color: var(--ink); }
+  .tag.red { background: var(--accent3); }
+
+  .hero-divider {
+    width: 40px; height: 2px;
+    background: var(--accent);
+    margin: 32px 0;
+  }
+
+  .by-line {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--ink);
+  }
+
+  .by-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* NAV BAR */
+  .nav {
+    position: sticky;
+    top: 0;
+    background: var(--ink);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+    border-bottom: 1px solid rgba(245,242,235,0.15);
+  }
+
+  .nav-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,242,235,0.6);
+    text-decoration: none;
+    padding: 18px 20px;
+    transition: color 0.2s;
+    border-right: 1px solid rgba(245,242,235,0.1);
+  }
+  .nav-item:first-child { border-left: 1px solid rgba(245,242,235,0.1); }
+  .nav-item:hover { color: var(--accent2); }
+
+  .nav-spacer { flex: 1; }
+
+  .nav-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    color: var(--paper);
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 100px 60px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.1;
+    margin-bottom: 60px;
+  }
+
+  /* MODULES GRID */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+    border: 2px solid var(--ink);
+  }
+
+  .module-card {
+    background: var(--card);
+    padding: 40px 36px;
+    border-right: 2px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.25s;
+  }
+
+  .module-card:hover { background: var(--ink); color: var(--paper); }
+  .module-card:hover .module-num { color: var(--accent2); }
+  .module-card:hover .module-desc { color: rgba(245,242,235,0.65); }
+  .module-card:hover .module-icon-bg { opacity: 0.05; }
+
+  .module-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 48px;
+    font-weight: 500;
+    color: var(--rule);
+    line-height: 1;
+    margin-bottom: 20px;
+    transition: color 0.25s;
+  }
+
+  .module-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .module-desc {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+    transition: color 0.25s;
+  }
+
+  .module-icon-bg {
+    position: absolute;
+    bottom: -20px; right: -20px;
+    font-size: 100px;
+    opacity: 0.04;
+    transition: opacity 0.25s;
+  }
+
+  /* METRICS BAND */
+  .metrics {
+    background: var(--accent);
+    color: white;
+    padding: 60px;
+    border-bottom: 2px solid var(--ink);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+
+  .metric-item { border-left: 2px solid rgba(255,255,255,0.3); padding-left: 24px; }
+  .metric-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .metric-label { font-size: 13px; opacity: 0.75; font-weight: 300; }
+
+  /* DATA ANALYSIS */
+  .data-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .data-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    font-weight: 300;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .badge-paid { color: var(--accent); font-weight: 600; }
+  .badge-unpaid { color: var(--accent3); font-weight: 600; }
+  .badge-settled { color: var(--accent); font-weight: 600; }
+  .badge-pending { color: var(--accent3); font-weight: 600; }
+
+  /* CHART BAR */
+  .chart-container { margin-top: 24px; }
+  .chart-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .chart-bar-label { font-family: 'DM Mono', monospace; font-size: 10px; width: 80px; text-align: right; color: var(--muted); flex-shrink: 0; }
+  .chart-bar-track { flex: 1; height: 24px; background: var(--rule); position: relative; overflow: hidden; }
+  .chart-bar-fill { height: 100%; transition: width 1s cubic-bezier(.23,1,.32,1); display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+  .chart-bar-fill span { font-family: 'DM Mono', monospace; font-size: 10px; color: white; }
+
+  /* TECH STACK */
+  .stack-section { background: var(--ink); color: var(--paper); }
+  .stack-section .section-eyebrow { color: var(--accent2); }
+  .stack-section .section-title { color: var(--paper); }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2px;
+  }
+
+  .stack-item {
+    border: 1px solid rgba(245,242,235,0.12);
+    padding: 32px 28px;
+    transition: background 0.2s;
+  }
+  .stack-item:hover { background: rgba(245,242,235,0.05); }
+
+  .stack-icon { font-size: 28px; margin-bottom: 16px; }
+  .stack-name { font-family: 'DM Serif Display', serif; font-size: 18px; margin-bottom: 8px; }
+  .stack-role { font-size: 12px; color: rgba(245,242,235,0.5); font-weight: 300; line-height: 1.5; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--ink); }
+
+  .timeline-item { position: relative; margin-bottom: 40px; }
+  .timeline-dot {
+    position: absolute; left: -32px; top: 4px;
+    width: 14px; height: 14px;
+    background: var(--accent);
+    border: 3px solid var(--paper);
+    outline: 2px solid var(--ink);
+  }
+
+  .timeline-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .timeline-title { font-family: 'DM Serif Display', serif; font-size: 20px; margin-bottom: 6px; }
+  .timeline-body { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 60px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 40px;
+  }
+
+  .footer-title { font-family: 'DM Serif Display', serif; font-size: 36px; margin-bottom: 12px; }
+  .footer-sub { font-size: 13px; color: rgba(245,242,235,0.5); font-weight: 300; line-height: 1.6; max-width: 400px; }
+
+  .footer-links { display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+  .footer-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: rgba(245,242,235,0.6);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .footer-link:hover { color: var(--accent2); }
+  .footer-link::after { content: '↗'; }
+
+  /* CHART ANIMATE on scroll */
+  .bar-animated .chart-bar-fill { animation: growBar 1.2s cubic-bezier(.23,1,.32,1) forwards; }
+  @keyframes growBar { from { width: 0 !important; } }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { padding: 60px 40px; }
+    .hero-left { padding: 60px 40px; min-height: 70vh; }
+    section { padding: 60px 30px; }
+    .metrics { grid-template-columns: repeat(2, 1fr); padding: 40px 30px; }
+    .data-section { grid-template-columns: 1fr; }
+    .nav { padding: 0 20px; overflow-x: auto; }
+    footer { grid-template-columns: 1fr; }
+    .footer-links { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div>
+      <div class="hero-tag">// Portfolio Project · April 2026</div>
+      <h1 class="hero-title">AI<br><em>Finance</em><br>Agent</h1>
+      <p class="hero-subtitle">A 5-module agentic AI system for financial operations — built from scratch, deployed on Hugging Face Spaces, without prior coding experience.</p>
+      <div class="hero-ctas">
+        <a href="https://huggingface.co/spaces/Rituv19/ai-finance-agent" target="_blank" class="btn btn-primary">🚀 Live Demo</a>
+        <a href="https://github.com/rituverma1969a-jpg/ai-finance-agent" target="_blank" class="btn btn-outline">⌥ GitHub Repo</a>
+      </div>
+    </div>
+    <div class="hero-tag" style="margin-bottom:0">Ritu Verma · AI & Finance Professional · Pune</div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-meta-label">Status</div>
+    <div class="hero-meta-val" style="color:var(--accent)">● Live &amp; Deployed</div>
+
+    <div class="hero-meta-label">Platform</div>
+    <div class="hero-meta-val">Hugging Face Spaces</div>
+
+    <div class="hero-meta-label">Tech Stack</div>
+    <div class="hero-stack">
+      <span class="tag green">Python</span>
+      <span class="tag green">Streamlit</span>
+      <span class="tag gold">Gemini AI</span>
+      <span class="tag">Pandas</span>
+      <span class="tag">Plotly</span>
+      <span class="tag">PDFPlumber</span>
+    </div>
+
+    <div class="hero-meta-label">Modules</div>
+    <div class="hero-stack">
+      <span class="tag">Invoice Recon</span>
+      <span class="tag">Insurance Claims</span>
+      <span class="tag">Credit Memo</span>
+      <span class="tag">Budget Forecast</span>
+      <span class="tag">Annual Report</span>
+    </div>
+
+    <div class="hero-divider"></div>
+
+    <div class="by-line">Ritu Verma</div>
+    <div class="by-sub">Advanced AI Data Trainer · Ex-Barclays Operations Analyst<br>BCom (Hons) International Accounting &amp; Finance · MIT Pune</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#modules" class="nav-item">Modules</a>
+  <a href="#data" class="nav-item">Data Analysis</a>
+  <a href="#stack" class="nav-item">Tech Stack</a>
+  <a href="#build" class="nav-item">Build Story</a>
+  <div class="nav-spacer"></div>
+  <span class="nav-brand">AI Finance Agent</span>
+</nav>
+
+<!-- METRICS BAND -->
+<div class="metrics">
+  <div class="metric-item">
+    <div class="metric-num">5</div>
+    <div class="metric-label">AI-powered modules</div>
+  </div>
+  <div class="metric-item">
+    <div class="metric-num">10</div>
+    <div class="metric-label">Days to build from zero</div>
+  </div>
+  <div class="metric-item">
+    <div class="metric-num">1500+</div>
+    <div class="metric-label">LLM evaluations completed</div>
+  </div>
+  <div class="metric-item">
+    <div class="metric-num">V2</div>
+    <div class="metric-label">Current version — Plotly charts</div>
+  </div>
+</div>
+
+<!-- MODULES -->
+<section id="modules">
+  <div class="section-eyebrow">// 01 — What it does</div>
+  <h2 class="section-title">Five Modules.<br>One Agentic System.</h2>
+
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-num">01</div>
+      <div class="module-name">Invoice Reconciliation</div>
+      <div class="module-desc">AI-powered matching of invoices vs. payments. Flags unpaid vendors, computes discrepancies, and generates reconciliation summaries with Plotly bar charts.</div>
+      <div class="module-icon-bg">🧾</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">02</div>
+      <div class="module-name">Insurance Claims Reconciliation</div>
+      <div class="module-desc">Matches insurance claims against settlement records. Identifies pending exposures, highest-risk claimants, and insurer-wise volume breakdowns.</div>
+      <div class="module-icon-bg">🏥</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">03</div>
+      <div class="module-name">Credit Memo Builder</div>
+      <div class="module-desc">Automated generation of structured credit memos from input data — formatted, AI-reviewed, and export-ready for finance teams.</div>
+      <div class="module-icon-bg">📝</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">04</div>
+      <div class="module-name">Budget Forecasting</div>
+      <div class="module-desc">Analyzes monthly income and expense trends, computes net surplus, expense ratios, and projects forward-looking budget scenarios.</div>
+      <div class="module-icon-bg">📊</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">05</div>
+      <div class="module-name">Annual Report Analyzer</div>
+      <div class="module-desc">Ingests uploaded annual reports (PDF), extracts financial highlights using PDFPlumber + Gemini AI, and surfaces key metrics and risks.</div>
+      <div class="module-icon-bg">📄</div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA ANALYSIS -->
+<section id="data">
+  <div class="section-eyebrow">// 02 — Real data, real findings</div>
+  <h2 class="section-title">What the Agent<br>Discovered.</h2>
+
+  <div class="data-section">
+    <div>
+      <p style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Invoice Reconciliation · 5 records</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>Vendor</th><th>Amount (Rs.)</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ABC Corp</td><td>5,000</td><td class="badge-paid">✓ Paid</td></tr>
+          <tr><td>PQR Inc</td><td>7,800</td><td class="badge-paid">✓ Paid</td></tr>
+          <tr><td>DEF Ltd</td><td>6,200</td><td class="badge-paid">✓ Paid</td></tr>
+          <tr><td>XYZ Ltd</td><td>3,200</td><td class="badge-unpaid">✗ Unpaid</td></tr>
+          <tr><td>LMN Co</td><td>4,500</td><td class="badge-unpaid">✗ Unpaid</td></tr>
+        </tbody>
+      </table>
+
+      <p style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin: 36px 0 12px">Insurance Claims · 5 records</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>Claimant</th><th>Claimed (Rs.)</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Raj Sharma</td><td>25,000</td><td class="badge-settled">✓ Settled</td></tr>
+          <tr><td>Amit Singh</td><td>15,000</td><td class="badge-settled">✓ Settled</td></tr>
+          <tr><td>Priya Mehta</td><td>48,000</td><td class="badge-pending">⏳ Pending</td></tr>
+          <tr><td>Sunita Rao</td><td>72,000</td><td class="badge-pending">⏳ Pending</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <p style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Monthly Expense Ratio · Sep 2023 – Feb 2024</p>
+      <div class="chart-container bar-animated" id="barChart">
+        <div class="chart-bar-row">
+          <div class="chart-bar-label">Sep 2023</div>
+          <div class="chart-bar-track"><div class="chart-bar-fill" style="width:80%;background:var(--accent)"><span>80%</span></div></div>
+        </div>
+        <div class="chart-bar-row">
+          <div class="chart-bar-label">Oct 2023</div>
+          <div class="chart-bar-track"><div class="chart-bar-fill" style="width:80.7%;background:var(--accent)"><span>81%</span></div></div>
+        </div>
+        <div class="chart-bar-row">
+          <div class="chart-bar-label">Nov 2023</div>
+          <div class="chart-bar-track"><div class="chart-bar-fill" style="width:91.5%;background:var(--accent3)"><span>91.5%</span></div></div>
+        </div>
+        <div class="chart-bar-row">
+          <div class="chart-bar-label">Dec 2023</div>
+          <div class="chart-bar-track"><div class="chart-bar-fill" style="width:86.3%;background:var(--accent3)"><span>86.3%</span></div></div>
+        </div>
+        <div class="chart-bar-row">
+          <div class="chart-bar-label">Jan 2024</div>
+          <div class="chart-bar-track"><div class="chart-bar-fill" style="width:78%;background:var(--accent)"><span>78%</span></div></div>
+        </div>
+        <div class="chart-bar-row">
+          <div class="chart-bar-label">Feb 2024</div>
+          <div class="chart-bar-track"><div class="chart-bar-fill" style="width:82%;background:var(--accent2);"><span style="color:var(--ink)">82%</span></div></div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;font-weight:300">⚠ Threshold: 80% | Red bars exceed recommended limit.<br>Avg net surplus: Rs. 14,167/month across the period.</p>
+
+      <div style="margin-top:40px;padding:24px;border:2px solid var(--ink);background:white">
+        <p style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">AI Recommendations</p>
+        <ul style="font-size:13px;font-weight:300;line-height:1.9;padding-left:16px;color:var(--ink)">
+          <li>Follow up with XYZ Ltd &amp; LMN Co immediately (Rs. 7,700 outstanding)</li>
+          <li>Escalate Sunita Rao claim — Rs. 72,000 exposure via ICICI Lombard</li>
+          <li>Nov–Dec expense spike warrants cost audit</li>
+          <li>Budget surplus positive — optimize working capital allocation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="stack" class="stack-section">
+  <div class="section-eyebrow">// 03 — How it was built</div>
+  <h2 class="section-title">The Stack.</h2>
+
+  <div class="stack-grid">
+    <div class="stack-item">
+      <div class="stack-icon">🐍</div>
+      <div class="stack-name">Python</div>
+      <div class="stack-role">Core application logic, data processing pipelines, file handling, and module orchestration.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🎛</div>
+      <div class="stack-name">Streamlit</div>
+      <div class="stack-role">Full web UI with multi-page routing, file uploaders, interactive dashboards, and live data rendering.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">✨</div>
+      <div class="stack-name">Google Gemini AI</div>
+      <div class="stack-role">gemini-2.5-flash-lite powering natural language analysis, summaries, and intelligent recommendations.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🐼</div>
+      <div class="stack-name">Pandas</div>
+      <div class="stack-role">Data reconciliation, merging datasets, computing variances, and financial aggregations.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">📈</div>
+      <div class="stack-name">Plotly</div>
+      <div class="stack-role">Interactive bar, pie, and line charts embedded across all 5 modules plus a summary Dashboard.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">📄</div>
+      <div class="stack-name">PDFPlumber</div>
+      <div class="stack-role">Extracts structured text and tables from uploaded annual reports and financial PDFs.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🤗</div>
+      <div class="stack-name">Hugging Face Spaces</div>
+      <div class="stack-role">Live cloud deployment — publicly accessible, always-on, zero infrastructure management.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon">🐙</div>
+      <div class="stack-name">GitHub</div>
+      <div class="stack-role">Version control, .gitignore for API key security, Phase 1 → Version 2 commit history.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILD STORY / TIMELINE -->
+<section id="build">
+  <div class="section-eyebrow">// 04 — The journey</div>
+  <h2 class="section-title">Built in 10 days.<br>Zero coding background.</h2>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Day 1–2</div>
+        <div class="timeline-title">Project Foundation</div>
+        <div class="timeline-body">Set up Python environment, Streamlit scaffold, and multi-page structure. Defined 5 module architecture from scratch.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Day 3–5</div>
+        <div class="timeline-title">Core Modules Built</div>
+        <div class="timeline-body">Invoice Reconciliation, Insurance Claims, and Credit Memo Builder implemented. Pandas merge logic and Gemini AI integration working.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Day 6–7</div>
+        <div class="timeline-title">Budget & Report Analyzer</div>
+        <div class="timeline-body">Budget Forecasting module with trend analysis. Annual Report Analyzer using PDFPlumber + AI summarization added.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Day 8</div>
+        <div class="timeline-title">Phase 1 — First Deployment</div>
+        <div class="timeline-body">App deployed live on Hugging Face Spaces. GitHub repo created. API key secured with .gitignore after two exposure incidents.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Day 9–10</div>
+        <div class="timeline-title">Version 2 — Plotly Dashboard</div>
+        <div class="timeline-body">Added Plotly interactive visualizations across all modules. Built a unified Dashboard summary page. Pushed as Version 2.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent2)"></div>
+        <div class="timeline-date">Coming April 20</div>
+        <div class="timeline-title">Phase 3 — Email Automation</div>
+        <div class="timeline-body">Scheduled alerts and email automation using Python smtplib + schedule library. Outlook SMTP integration in progress.</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="padding:36px;border:2px solid var(--ink);margin-bottom:24px">
+        <p style="font-family:'DM Serif Display',serif;font-size:22px;line-height:1.4;margin-bottom:16px">"I'm not a developer. I'm a finance professional who builds AI tools."</p>
+        <p style="font-size:13px;font-weight:300;color:var(--muted);line-height:1.7">This project was built without a computer science degree, without prior coding experience, and without a team. Just finance domain knowledge, problem-solving instinct, and 10 focused days.</p>
+      </div>
+
+      <div style="padding:36px;background:var(--ink);color:var(--paper)">
+        <p style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:16px">Key Achievements</p>
+        <ul style="font-size:13px;font-weight:300;line-height:2;list-style:none">
+          <li>→ Live production app, publicly accessible</li>
+          <li>→ AI + Finance integration — domain + tech</li>
+          <li>→ 1,500+ LLM evaluations at Invisible Technologies</li>
+          <li>→ Ex-Barclays international payments operations</li>
+          <li>→ Excel Power Query + SQL analysis complete</li>
+          <li>→ Full Power BI dashboard with PivotCharts built</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-title">Ritu Verma</div>
+    <div class="footer-sub">AI Operations · LLM Evaluation · Finance AI Analysis · Solutions Consulting<br>Open to roles at HSBC, Citi, McKinsey, PhonePe, Razorpay &amp; AI-focused firms.<br>Expected CTC: 8–12 LPA · Based in Pune, Maharashtra</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://huggingface.co/spaces/Rituv19/ai-finance-agent" target="_blank" class="footer-link">Live Demo on Hugging Face</a>
+    <a href="https://github.com/rituverma1969a-jpg/ai-finance-agent" target="_blank" class="footer-link">GitHub Repository</a>
+  </div>
+</footer>
+
+<script>
+  // Animate bars when in viewport
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('bar-animated');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const chart = document.getElementById('barChart');
+  if (chart) {
+    // Reset widths to 0 initially
+    chart.querySelectorAll('.chart-bar-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.setAttribute('data-width', w);
+      bar.style.width = '0%';
+    });
+    observer.observe(chart);
+  }
+
+  // Watch for bar animation class to restore widths
+  const barObserver = new MutationObserver(() => {
+    if (chart.classList.contains('bar-animated')) {
+      chart.querySelectorAll('.chart-bar-fill').forEach(bar => {
+        bar.style.width = bar.getAttribute('data-width');
+      });
+    }
+  });
+  if (chart) barObserver.observe(chart, { attributes: true, attributeFilter: ['class'] });
+</script>
+</body>
+</html>
