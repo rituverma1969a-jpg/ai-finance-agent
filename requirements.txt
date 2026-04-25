@@ -1,6 +1,8 @@
 streamlit
 google-generativeai
-pdfplumber
 pandas
-openpyxl
+plotly
+pdfplumber
 python-dotenv
+schedule
+openpyxl
